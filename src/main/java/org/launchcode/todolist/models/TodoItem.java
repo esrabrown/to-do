@@ -1,24 +1,33 @@
 package org.launchcode.todolist.models;
 
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Todo {
+@Entity
+public class TodoItem extends AbstractEntity{
 
+    @NotNull
     private String title;
     private String description;
+    @NotNull
     private LocalDate dueDate;
     private boolean completed;
 
 
-    public Todo(String title, String description, LocalDate dueDate, boolean completed){
+    public TodoItem(String title, String description, LocalDate dueDate, boolean completed){
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.completed = completed;
     }
 
-    public Todo() {
+    public TodoItem() {
     }
 
     public String getTitle() {
