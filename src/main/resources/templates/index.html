@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List</title>
+</head>
+<body>
+<h1>To-Do List</h1>
+
+<!-- Display the list of to-do items -->
+<ul>
+    <li th:each="item : ${items}">
+        <span th:text="${item.title}"></span>
+        <span th:text="${item.description}"></span>
+        <span th:text="${item.dueDate}"></span>
+        <!-- Add more fields as needed -->
+    </li>
+</ul>
+
+<!-- Link to create a new to-do item -->
+<a th:href="@{/create}">Create New Item</a>
+
+<!-- Link to delete items -->
+<a th:href="@{/delete}">Delete Items</a>
+</body>
+</html>

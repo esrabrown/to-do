@@ -17,18 +17,16 @@ public abstract class AbstractEntity {
         return id;
     }
 
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AbstractEntity that = (AbstractEntity) o;
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        AbstractEntity entity = (AbstractEntity) o;
+        return id == entity.getId();
+     }
+     @Override
+    public int hashCode(){
         return Objects.hash(id);
-    }
+     }
 
 }

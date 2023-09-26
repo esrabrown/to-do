@@ -1,0 +1,52 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org/">-->
+<!--<head th:replace="fragments :: head"></head>-->
+<!--<body class="container">-->
+
+<!--<header th:replace="fragments :: header"></header>-->
+
+<!--<form method="post">-->
+
+<!--  <th:block th:each="item : ${items}">-->
+<!--    <div class="form-group">-->
+<!--      <label>-->
+<!--        <span th:text="${item.title}"></span>-->
+<!--        <input type="checkbox" name="eventIds" th:value="${item.id}" class="form-control">-->
+<!--      </label>-->
+<!--    </div>-->
+<!--  </th:block>-->
+
+<!--  <input type="submit" value="Delete" class="btn btn-danger">-->
+<!--</form>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Delete Items</title>
+</head>
+<body>
+<h1>Delete Items</h1>
+
+<!-- Display the list of items that can be deleted -->
+<form th:action="@{/delete}" method="post">
+  <ul>
+    <li th:each="item : ${items}">
+      <label>
+        <input type="checkbox" th:name="itemIds" th:value="${item.id}">
+        <span th:text="${item.title}"></span>
+      </label>
+    </li>
+  </ul>
+
+  <!-- Submit button to delete selected items -->
+  <button type="submit">Delete Selected Items</button>
+</form>
+
+<!-- Link to go back to the main page -->
+<a th:href="@{/}">Back to Main Page</a>
+</body>
+</html>

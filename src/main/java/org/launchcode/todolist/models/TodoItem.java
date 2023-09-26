@@ -2,20 +2,17 @@ package org.launchcode.todolist.models;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class TodoItem extends AbstractEntity{
 
-    @NotNull
+    @NotBlank
     private String title;
     private String description;
-    @NotNull
+
     private LocalDate dueDate;
     private boolean completed;
 
@@ -24,11 +21,13 @@ public class TodoItem extends AbstractEntity{
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
-        this.completed = completed;
+        this.completed = false;
     }
 
-    public TodoItem() {
-    }
+    public TodoItem(){}
+
+//    public TodoItem(Iterable<TodoItem> todoList) {
+//    }
 
     public String getTitle() {
         return title;
