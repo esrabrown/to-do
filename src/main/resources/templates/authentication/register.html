@@ -6,30 +6,6 @@
 </head>
 <body>
 <h1>Register</h1>
-<!--<form action="#" th:action="@{/register}" method="post">-->
-<!--    <label for="name">Name:</label>-->
-<!--    <input type="text" id="name" th:field="*{name}" />-->
-<!--    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
-
-<!--    &lt;!&ndash; Last Name Field &ndash;&gt;-->
-<!--    <label for="lastName">Last Name:</label>-->
-<!--    <input type="text" id="lastName" th:field="*{lastName}" />-->
-<!--    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>-->
-
-<!--    &lt;!&ndash; Email Field &ndash;&gt;-->
-<!--    <label for="email">Email:</label>-->
-<!--    <input type="email" id="email" th:field="*{email}" />-->
-<!--    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>-->
-
-<!--    <label for="password">Password:</label>-->
-<!--    <input type="password" id="password" th:field="*{password}" />-->
-<!--    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>-->
-
-<!--    <label for="verifyPassword">Verify Password:</label>-->
-<!--    <input type="password" id="verifyPassword" th:field="*{verifyPassword}" />-->
-<!--    <div th:if="${#fields.hasErrors('verifyPassword')}" th:errors="*{verifyPassword}"></div>-->
-
-<!--    <button type="submit">Register</button>-->
 <form class="register-form" th:action="@{/authentication/register}" method="post">
     <div class="form-group">
         <label class="register-label">Name

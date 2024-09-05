@@ -1,8 +1,7 @@
 package org.launchcode.todolist.models;
 
-import jakarta.persistence.Entity;
-import jakarta.validation.Valid;
 
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 
 

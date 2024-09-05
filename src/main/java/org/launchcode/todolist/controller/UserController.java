@@ -56,13 +56,6 @@ public class UserController {
         userRepository.save(newUser);
         return "redirect:/";
 
-        // Encode password before saving
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//
-//        userRepository.save(user);
-//
-//        return "redirect:/login";
-//    }
     }
 
     @GetMapping("/authentication/login")

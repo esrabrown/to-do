@@ -8,7 +8,6 @@
 <body>
 <h1>Create Item</h1>
 
-<!-- Form to create a new to-do item -->
 <form th:action="@{/create}" method="post" th:object="${item}">
   <label for="title">Title:</label>
   <input type="text" id="title" name="title" th:field="*{title}" required>
@@ -22,7 +21,6 @@
   <button type="submit">Create Item</button>
 </form>
 
-<!-- Link to go back to the main page -->
 <a th:href="@{/}">Back to Main Page</a>
 </body>
 </html>

@@ -62,7 +62,6 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/authentication/login")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true);
-        //sets our DAOAuthProvider as the auth provider used by spring security
         http.authenticationProvider(authenticationProvider());
 
         return http.build();
