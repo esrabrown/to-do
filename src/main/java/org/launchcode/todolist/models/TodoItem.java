@@ -9,6 +9,9 @@ import java.time.LocalDate;
 @Entity
 public class TodoItem extends AbstractEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     @NotBlank
     private String title;
     private String description;

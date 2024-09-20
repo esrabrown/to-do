@@ -32,7 +32,6 @@ public class User {
     private String password;
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    public User() {}
 
     public User(String name, String lastName, String email, String password) {
         this.name = name;
@@ -40,6 +39,8 @@ public class User {
         this.email = email;
         this.password = encoder.encode(password);
     }
+
+    public User() {}
 
     public Long getId() {
         return id;
