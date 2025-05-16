@@ -37,7 +37,7 @@ public class User {
         this.name = name;
         this.lastName = lastName;
         this.email = email;
-        this.password = encoder.encode(password);
+        this.password = password;
     }
 
     public User() {}
