@@ -1,5 +1,7 @@
 package org.launchcode.todolist.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.launchcode.todolist.models.dto.RegisterFormDTO;
 import org.launchcode.todolist.models.User;
@@ -7,8 +9,15 @@ import org.launchcode.todolist.models.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
+
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +32,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
 
 
     @PostMapping("/register")
@@ -62,32 +74,27 @@ public class UserController {
     }
 
 
-@PostMapping("/login")
-public ResponseEntity<Map<String, String>> loginUser(@RequestBody Map<String, String> credentials) {
-    String email = credentials.get("email");
-    String password = credentials.get("password").trim();
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> credentials, HttpServletRequest request) {
+        String email = credentials.get("email");
+        String password = credentials.get("password").trim();
 
-    // Fetch user from the database
-    User user = userRepository.findByEmail(email);
-    if (user == null) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "User not found"));
-    }
+        User user = userRepository.findByEmail(email);
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
+        }
 
-    System.out.println("Raw password: " + password);
-    System.out.println("Stored hash: " + user.getPassword());
-    System.out.println("Login attempt with email: " + email);
-    System.out.println("User from DB: " + user); // or log user.getEmail()
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(email, password);
+        Authentication authentication = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        HttpSession session = request.getSession(true);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext());
 
-
-    // Compare provided password with stored hashed password
-    if (passwordEncoder.matches(password, user.getPassword())) {
         return ResponseEntity.ok(Map.of("message", "Login successful"));
-    } else {
-        System.out.println("Password mismatch");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Invalid password"));
     }
-}
 
 
 }

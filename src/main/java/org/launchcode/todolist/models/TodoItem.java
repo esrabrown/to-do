@@ -1,36 +1,35 @@
+
 package org.launchcode.todolist.models;
 
-
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
-
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Entity
-public class TodoItem extends AbstractEntity{
+public class TodoItem extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @NotBlank
+    @NotBlank(message = "Title is required")
     private String title;
+
     private String description;
 
-    private LocalDate dueDate;
+//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+//    private LocalDateTime dueDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private OffsetDateTime dueDate;
     private boolean completed;
 
+    public TodoItem() {}
 
-    public TodoItem(String title, String description, LocalDate dueDate, boolean completed){
+    public TodoItem(String title, String description, OffsetDateTime dueDate, boolean completed) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
-        this.completed = false;
+        this.completed = completed;
     }
 
-    public TodoItem(){}
-
-//    public TodoItem(Iterable<TodoItem> todoList) {
-//    }
 
     public String getTitle() {
         return title;
@@ -48,11 +47,11 @@ public class TodoItem extends AbstractEntity{
         this.description = description;
     }
 
-    public LocalDate getDueDate() {
+    public OffsetDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(LocalDate dueDate) {
+    public void setDueDate(OffsetDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -63,6 +62,4 @@ public class TodoItem extends AbstractEntity{
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-
-
 }

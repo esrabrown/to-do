@@ -78,20 +78,33 @@
 
 package org.launchcode.todolist.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.launchcode.todolist.models.data.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -112,70 +125,32 @@ public class SecurityConfig {
         return authProvider;
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeRequests()
-//               // .requestMatchers("/api/users/authentication/register", "/api/users/authentication/login", "/css/**", "/images/**").permitAll()
-//                // .requestMatchers("/api/users/**").permitAll()
-//                .requestMatchers("/api/users/authentication/login/**", "/api/users/authentication/register/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .loginPage("/authentication/login")
-//                .loginProcessingUrl("/api/users/authentication/login")
-//                .usernameParameter("email")
-//                .passwordParameter("password")
-//                .defaultSuccessUrl("/", true)
-//                .failureUrl("/authentication/login?error")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .logoutUrl("/api/users/authentication/logout")
-//                .logoutSuccessUrl("/authentication/login")
-//                .invalidateHttpSession(true)
-//                .clearAuthentication(true)
-//                .permitAll()
-//                .and()
-//                .cors();  // Enable CORS
-//
-//        return http.build();
-//    }
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeRequests()
-//                .requestMatchers("/api/users/authentication/register", "/api/users/authentication/login", "/api/todos", "/api/create", "/error").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .cors()  // Enable CORS
-//                .and()
-//                .formLogin().disable();  // Disable default form login
-//
-//        return http.build();
-//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // <--- ADD THIS
+                .and()
                 .authorizeRequests()
-              //  .requestMatchers("/api/users/authentication/register", "/api/users/authentication/login", "/api/todos", "/api/create", "/error").permitAll()
-                .requestMatchers("/api/users/authentication/register", "/api/users/authentication/login","/error").permitAll()
-                .requestMatchers("/api/create", "/api/delete", "/api/todos").authenticated()
-//                .requestMatchers("/admin_only/**").hasAuthority("ADMIN")
+                .requestMatchers("/api/users/authentication/register", "/api/users/authentication/login", "/error").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/todos").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/todos").authenticated()
+                .requestMatchers("/api/todos/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
-                .cors()  // Enable CORS
+                .cors().configurationSource(corsConfigurationSource())
                 .and()
-                .formLogin().disable();  // Disable default form login
+                .formLogin().disable();
 
         return http.build();
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -184,11 +159,26 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
 
         };
     }
+
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }
